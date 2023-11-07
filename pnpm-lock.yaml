@@ -1,0 +1,47 @@
+lockfileVersion: '6.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+dependencies:
+  openapi-typescript-helpers:
+    specifier: ^0.0.4
+    version: 0.0.4
+
+devDependencies:
+  '@types/aws-lambda':
+    specifier: ^8.10.126
+    version: 8.10.126
+  '@types/node':
+    specifier: ^20.9.0
+    version: 20.9.0
+  typescript:
+    specifier: ^5.2.2
+    version: 5.2.2
+
+packages:
+
+  /@types/aws-lambda@8.10.126:
+    resolution: {integrity: sha512-5eh4ffLdGYgGYI1Xr6W5L4IVse4RR7L2ns5OVUXA52nW5GFapIcGMcCzHAIMMOdpcQs3aGVxbvFlJNZH6IpgEQ==}
+    dev: true
+
+  /@types/node@20.9.0:
+    resolution: {integrity: sha512-nekiGu2NDb1BcVofVcEKMIwzlx4NjHlcjhoxxKBNLtz15Y1z7MYf549DFvkHSId02Ax6kGwWntIBPC3l/JZcmw==}
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
+  /openapi-typescript-helpers@0.0.4:
+    resolution: {integrity: sha512-Q0MTapapFAG993+dx8lNw33X6P/6EbFr31yNymJHq56fNc6dODyRm8tWyRnGxuC74lyl1iCRMV6nQCGQsfVNKg==}
+    dev: false
+
+  /typescript@5.2.2:
+    resolution: {integrity: sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+    dev: true
+
+  /undici-types@5.26.5:
+    resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
+    dev: true
