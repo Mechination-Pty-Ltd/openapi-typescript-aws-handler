@@ -5,7 +5,7 @@ This library does no code-generation of its own.  It depends on *openapi-typescr
 
 # Usage
 
-To use this, there are a couple of steps
+To use this library there are a couple of steps
 
 1. Generate bindings for your application using (openapi-typescript)[https://github.com/drwpow/openapi-typescript]
 1. Create a lambda handler using the `makeOpenApiLambdaHandler` call from this package.  For example
@@ -51,3 +51,7 @@ To use this, there are a couple of steps
     })
     ```
 1. Set up your API gateway to use this lambda to handle requests. 
+
+
+
+See the [example](example) directory for some simple examples

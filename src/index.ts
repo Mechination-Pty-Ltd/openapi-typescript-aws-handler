@@ -9,8 +9,10 @@ import { SuccessResponse, OperationRequestBodyContent, ResponseObjectMap, Filter
 export interface ApiCallInput {
     operationId: string
     body: string|null
-    pathParams: Record<string,string>
-    queryParams: Record<string,string>
+    params: {
+        path: Record<string,string> | undefined
+        query: Record<string,string> | undefined
+    };
 }
 
 /**
@@ -24,8 +26,7 @@ export interface ApiCallResult {
 
 export type OperationInput<OP> = {
     body: OperationRequestBodyContent<OP>
-    pathParameters: FilterKeys<FilterKeys<OP, "parameters">, "path">
-    queryParameters: FilterKeys<FilterKeys<OP, "parameters">, "query">
+    params: FilterKeys<OP, "parameters">
 }
 
 
@@ -78,8 +79,8 @@ type GenericOperation = {
         };
     };
     parameters: {
-        path: Record<string,string>,
-        query: Record<string,string>,
+        path: Record<string,string> | undefined,
+        query: Record<string,string> | undefined,
     }
     responses: {
         200: {
@@ -125,8 +126,7 @@ export function makeOpenApiLambdaHandler<OPS extends {}>(apiHandler: OperationHa
             const handler: OperationHandler<GenericOperation> = (apiHandler as any)[evt.operationId];
             const result = await handler({
                 body: evt.body && JSON.parse(evt.body) ,
-                pathParameters: evt.pathParams,
-                queryParameters: evt.queryParams,
+                params: evt.params,
             });
             logDebug(`Response ${JSON.stringify(result)}`);
             return {

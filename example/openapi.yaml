@@ -1,0 +1,94 @@
+openapi: '3.1.0'
+info:
+  version: '1.0'
+  title: Example Service
+
+  description: |
+    This is an example service
+
+  contact:
+    email: contact@mechination.com.au
+    url: https://github.com/Mechination-Pty-Ltd/openapi-typescript-aws-handler
+
+  license:
+    name: MIT
+    url: https://github.com/Mechination-Pty-Ltd/openapi-typescript-aws-handler/blob/main/LICENSE
+
+servers:
+  - url: https://test.mechination.com.au
+    description: Not a real server - just here for demonstration purposes
+
+paths:
+  /echoInput:
+    post:
+      summary: returns back exactly what it is sent.
+      operationId: echoInput
+      tags: [ application ]
+      parameters:
+        - $ref: "#/components/parameters/mock"
+
+      requestBody:
+        description: "The input to the operation"
+        content:
+          'application/json':
+            schema:
+              type: object
+              required:
+                - input
+              properties:
+                input: 
+                  type: string
+                  
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - response
+                properties:
+                  response: 
+                    type: string
+        '404': 
+          $ref: "#/components/responses/NotFound"
+        '500': 
+          $ref: "#/components/responses/ServerError"
+
+
+
+components:
+  responses:
+    NotFound:
+      description: The specified resource was not found
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ApiError"}
+    ServerError:
+      description: An unexpected error has occurred in the server.
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/ApiError"}
+
+  parameters:
+    mock: 
+      name: mock
+      description: A parameter that makes the function behave differently depending on what is sent. 
+      in: query
+      # required: false
+      schema:
+        type: string
+        enum:
+          - fail
+          - not_found
+
+
+  schemas:
+    ApiError:
+      description: An error occurred in the call
+      type: object
+      properties:
+        message: 
+          type: string        
