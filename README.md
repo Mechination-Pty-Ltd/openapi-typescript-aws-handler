@@ -2,6 +2,11 @@ This library extends upon the awesome [openapi-typescript](https://github.com/dr
 
 This library does no code-generation of its own.  It depends on *openapi-typescript* for that. Instead, it just provides some typescript type magic to provide a type-safe way of defining your handlers, and a simple wrapper that will take input and call your function.
 
+> 🚧 NOTE
+> ----
+>
+> This library does not currently vend or return AWS API Gateway proxy objects (as served by API Gateway) - This is because I have another wrapper around these objects, but I will add in another version of the wrapper that does work directly with Proxy request. You could write a trivial wrapper around this to do it yourself in the mean time. 
+>
 
 # Usage
 
