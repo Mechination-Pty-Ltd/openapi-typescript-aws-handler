@@ -1,11 +1,13 @@
-This library extends upon the awesome [openapi-typescript](https://github.com/drwpow/openapi-typescript) library to create AWS lambda bindings for handling requests that are made to an [OpenAPI](https://www.openapis.org/) library. The intention is to make it as easy as possible to create a typescript handler that will accept requests from somewhere else (presumably an [(API gateway)](https://aws.amazon.com/api-gateway/)) and will execute some type safe(ish) code to process that request.  It assumes that all validation has already been performed by an upstream 
+This library extends upon the awesome [openapi-typescript](https://github.com/drwpow/openapi-typescript) library to create AWS lambda bindings for handling requests that are made to an [OpenAPI](https://www.openapis.org/) API. The intention is to make it as easy as possible to create a typescript handler that will accept requests from somewhere else (presumably an [(API gateway)](https://aws.amazon.com/api-gateway/)) and will execute some type safe(ish) code to process that request.  It assumes that all validation has already been performed by an upstream 
 
 This library does no code-generation of its own.  It depends on *openapi-typescript* for that. Instead, it just provides some typescript type magic to provide a type-safe way of defining your handlers, and a simple wrapper that will take input and call your function.
 
 > 🚧 NOTE
 > ----
 >
-> This library does not currently vend or return AWS API Gateway proxy objects (as served by API Gateway) - This is because I have another wrapper around these objects, but I will add in another version of the wrapper that does work directly with Proxy request. You could write a trivial wrapper around this to do it yourself in the mean time. 
+> This library does not currently vend or return AWS API Gateway proxy objects (as served by API Gateway) - This is because I have another wrapper around these objects, but I will add in another version of the wrapper that does work directly with Proxy request. You could write a trivial wrapper around this to do it yourself in the mean time.
+>
+> This library also assumes that you are transmitting and receiving JSON only. Some APIs may use different content types.  Its unclear to me whether my API adapter should auto-transform, or whether the API desginer should be given control - probably a mixture of both.  Transforming between YAML and JSON is trivial, and could easily be handled by the wrapper. 
 >
 
 # Usage
