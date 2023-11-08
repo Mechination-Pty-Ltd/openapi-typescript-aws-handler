@@ -1,6 +1,5 @@
 import { OperationHandler, makeOpenApiLambdaHandler, Non2xxResult } from "openapi-typescript-aws-handler"
 import { operations, components,  } from "./api"  // This is the file you generated using openapi-typescript
-import { FilterKeys } from "openapi-typescript-helpers";
 
 /**
  * Makes it easier to throw the API specific ApiError.
@@ -11,8 +10,6 @@ class ApiError extends Non2xxResult<components['schemas']['ApiError']> {
     }
 }
 
-
-type Foo = /*FilterKeys<*/FilterKeys<operations["echoInput"], "parameters">//, "query">;
 
 /**
  *  Handler for the *echoInput* operation
