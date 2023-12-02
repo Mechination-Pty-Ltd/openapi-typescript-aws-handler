@@ -23,6 +23,9 @@ export interface ApiCallResult {
     body?: string|null
 }
 
+export type ApiCallHandler = Handler<ApiCallInput, ApiCallResult>;
+
+
 
 export type OperationInput<OP> = {
     body: OperationRequestBodyContent<OP>
