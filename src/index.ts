@@ -37,7 +37,7 @@ export type OperationInput<OP> = {
 
 type Values<V> = V[keyof V];
 type ObjectToAnyPair<V> = Values<{[K in keyof V]: {[K1 in K]: V[K1]}}>
-type OperationResponse<OP extends WithResponses> = ObjectToAnyPair<OP["responses"]>
+export type OperationResponse<OP extends WithResponses> = ObjectToAnyPair<OP["responses"]>
 
 
 type OperationMap = Record<string,WithResponses>;
