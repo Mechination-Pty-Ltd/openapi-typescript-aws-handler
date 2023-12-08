@@ -167,12 +167,18 @@ export function makeOpenApiLambdaHandler<OPS extends {}>(apiHandler: OperationHa
                 logDebug(`API raised ${ex.statusCode} result with content ${JSON.stringify(ex.content)}`);
                 return {
                     statusCode: ex.statusCode,
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
                     body: typeof(ex.content) === 'string' ? ex.content : JSON.stringify(ex.content)
                 }
             }
             console.error("An unhandled error occurred", ex);
             return {
                 statusCode: 500,
+                headers: {
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify({ message: "An error occurred"})
             }
         }
