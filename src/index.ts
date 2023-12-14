@@ -30,6 +30,7 @@ export type OperationInputWithoutRequestBody<P> = {
 export type RedirectionStatus = 300 | 301 | 302 | 303 | 304 | 307 | 308;
 export type AnyStatus = OkStatus | ErrorStatus | RedirectionStatus;
 
+export { deref } from "./utils";
 
 
 /**
@@ -51,6 +52,7 @@ export interface ApiCallResult {
     statusCode: number;
     headers: Record<string,string>;
     body?: string|null;
+    cookies?: string[];
 }
 
 
@@ -113,6 +115,22 @@ export class Non2xxResult<C extends {}> extends Error {
     }
 }
 
+function mapCookies(val: unknown): string[] {
+    if (val !== undefined) {
+        if (Array.isArray(val)) {
+            return val.filter(i => typeof(i) === 'string')
+        }
+        if (typeof(val) === 'string') {
+            return [val]
+        }
+    }
+    return [];
+}
+
+function normaliseHeaders(val: Record<string,string>) {
+    return Object.fromEntries(Object.entries(val).map(([k,v]) => [k.toLowerCase(), v]))
+
+}
 
 
 /**
@@ -144,14 +162,48 @@ export function makeOpenApiLambdaHandler<OPS extends {}>(apiHandler: OPS): Handl
             const response = await handler(input);
             logDebug("Response", response);
 
-            return {
-                statusCode: parseInt(response.statusCode),
-                headers: {
-                    ...(response.headers as Record<string,string>),
-                    "Content-Type": response.contentType
-                },
-                body: response.content ? JSON.stringify(response.content) : null
+            let body: string|null|undefined;
+
+            if (response.content) {
+                if (response.contentType === 'application/json') {
+                    body = JSON.stringify(response.content);
+                } else {
+                    if (typeof(response.content) !== 'string') {
+                        // TODO Should this be a 500 error?
+                        console.log("WARNING: Function returned non-string data when deailing with content-type ", response.contentType);
+                    }
+                    body = response.content?.toString()
+                }
+            } else {
+                body = "";
             }
+
+
+            const headers: Record<string,string> = response.headers ? normaliseHeaders(response.headers) : {};
+            // Cookies are treated separately from other headers, as they may have multiple values. 
+            let cookies: string[] = [];
+            const SET_COOKIE_HEADER = 'set-cookie'
+            if (headers[SET_COOKIE_HEADER]) {
+                cookies = mapCookies(headers[SET_COOKIE_HEADER]);
+                delete headers[SET_COOKIE_HEADER];
+            }
+            // all other headers must be single value
+            if (Object.entries(headers).find(([k,v]) => typeof(v) !== 'string'))  {
+                console.log("Headers are ", headers);
+                throw new Error("All Header responses must be single valued strings (except for Set-Cookie)")
+            }
+
+            if (response.contentType) {
+                headers['content-type'] = response.contentType;
+            }
+
+            const res: ApiCallResult = {
+                statusCode: parseInt(response.statusCode),
+                headers,
+                cookies,
+                body,
+            }
+            return res;
         } catch (ex: any) {
             if (ex instanceof Non2xxResult) {
                 logDebug("API raised ", ex.statusCode, "result with content", ex.content);
@@ -164,13 +216,7 @@ export function makeOpenApiLambdaHandler<OPS extends {}>(apiHandler: OPS): Handl
                 }
             }
             console.error("An unhandled error occurred", ex);
-            return {
-                statusCode: 500,
-                headers: {
-                    "Content-Type": JSON_CONTENT_TYPE
-                },
-                body: JSON.stringify({ message: "An error occurred"})
-            }
+            throw ex; // We want this to show up as an error in the lambda metrics.  The proxy handler will mask with the error message 
         }
     }
 }
